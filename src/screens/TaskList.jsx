@@ -27,8 +27,6 @@ export default props => {
         ]
     }
 
-    const today = moment().locale('pt-br').format('ddd, D [de] MMMM')
-
     toggleTask = taskId => {
         const tasks = [...this.state.tasks]
         tasks.forEach(task => {
@@ -37,8 +35,10 @@ export default props => {
             }
         })
 
-        this.setState({ tasks : tasks })
+        setState({ tasks : tasks })
     }
+
+    const today = moment().locale('pt-br').format('ddd, D [de] MMMM')
 
     return (
         <SafeAreaView style={style.container}>
