@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableWithoutFeedback } from "react-native";
 
 import commonStyles from "../commonStyles";
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -11,17 +11,21 @@ export default props => {
 
     const tarefaConcluidaNao = props.concluidaEm != null ?
         { textDecorationLine: 'line-through' } : {}
-    
+
     const date = props.concluidaEm ? props.concluidaEm : props.dataEstimada
-    
+
     const dateFormat = moment(date).locale('pt-br')
         .format('ddd, D [de] MMMM')
 
     return (
         <View style={style.container}>
-            <View style={style.checkContainer}>
-                {getCheckView(props.concluidaEm)}
-            </View>
+            <TouchableWithoutFeedback
+                onPress={() => props.toggleTask(props.id)}
+            >
+                <View style={style.checkContainer}>
+                    {getCheckView(props.concluidaEm)}
+                </View>
+            </TouchableWithoutFeedback>
             <View>
                 <Text style={[style.descricao, tarefaConcluidaNao]}>{props.descricao}</Text>
                 <Text style={style.date}>{dateFormat}</Text>

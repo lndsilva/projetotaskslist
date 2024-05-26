@@ -29,6 +29,17 @@ export default props => {
 
     const today = moment().locale('pt-br').format('ddd, D [de] MMMM')
 
+    toggleTask = taskId => {
+        const tasks = [...this.state.tasks]
+        tasks.forEach(task => {
+            if (task.id === taskId) {
+                task.concluidaEm = task.concluidaEm ? null : new Date()
+            }
+        })
+
+        this.setState({ tasks : tasks })
+    }
+
     return (
         <SafeAreaView style={style.container}>
             <ImageBackground source={todayImage} style={style.background}>
@@ -42,7 +53,7 @@ export default props => {
                 <FlatList
                     data={this.state.tasks}
                     keyExtractor={item => `${item.id}`}
-                    renderItem={({ item }) => <Task {...item} />}
+                    renderItem={({ item }) => <Task {...item} toggleTask={this.toggleTask} />}
                 />
             </View>
 
