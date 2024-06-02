@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { View, Text, ImageBackground, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Platform } from "react-native";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -10,7 +10,7 @@ import 'moment/locale/pt-br'
 
 import Task from "../components/Task";
 
-export default props => {
+export default class TaskList extends Component {
 
     state = {
         showDoneTasks: true,
@@ -32,7 +32,7 @@ export default props => {
         ]
     }
 
-    componentDidMount = () =>{
+    componentDidMount = () => {
         this.filterTasks()
     }
 
@@ -60,36 +60,38 @@ export default props => {
             }
         })
 
-        setState({ tasks: tasks })
+        this.setState({ tasks: tasks })
     }
+    render() {
 
-    const today = moment().locale('pt-br').format('ddd, D [de] MMMM')
+        const today = moment().locale('pt-br').format('ddd, D [de] MMMM')
 
-    return (
-        <SafeAreaView style={style.container}>
-            <ImageBackground source={todayImage} style={style.background}>
-                <View style={style.iconBar}>
-                    <TouchableOpacity onPress={this.toggleFilter}>
-                        <Icon name={this.state.showDoneTasks ? 'eye' : 'eye-slash'}
-                            size={20} color={commonStyles.colors.secundary} />
-                    </TouchableOpacity>
+        return (
+            <SafeAreaView style={style.container}>
+                <ImageBackground source={todayImage} style={style.background}>
+                    <View style={style.iconBar}>
+                        <TouchableOpacity onPress={this.toggleFilter}>
+                            <Icon name={this.state.showDoneTasks ? 'eye' : 'eye-slash'}
+                                size={20} color={commonStyles.colors.secundary} />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={style.titleBar}>
+                        <Text style={style.title}>Hoje</Text>
+                        <Text style={style.subTitle}>{today}</Text>
+                    </View>
+                </ImageBackground>
+
+                <View style={style.taskList}>
+                    <FlatList
+                        data={this.state.visibleTasks}
+                        keyExtractor={item => `${item.id}`}
+                        renderItem={({ item }) => <Task {...item} toggleTask={this.toggleTask} />}
+                    />
                 </View>
-                <View style={style.titleBar}>
-                    <Text style={style.title}>Hoje</Text>
-                    <Text style={style.subTitle}>{today}</Text>
-                </View>
-            </ImageBackground>
 
-            <View style={style.taskList}>
-                <FlatList
-                    data={this.state.visibleTasks}
-                    keyExtractor={item => `${item.id}`}
-                    renderItem={({ item }) => <Task {...item} toggleTask={this.toggleTask} />}
-                />
-            </View>
-
-        </SafeAreaView>
-    )
+            </SafeAreaView>
+        )
+    }
 }
 
 const style = StyleSheet.create({
