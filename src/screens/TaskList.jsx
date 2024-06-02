@@ -1,5 +1,6 @@
 import React from "react";
-import { View, Text, ImageBackground, StyleSheet, SafeAreaView, FlatList } from "react-native";
+import { View, Text, ImageBackground, StyleSheet, SafeAreaView, FlatList, TouchableOpacity, Platform } from "react-native";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import commonStyles from "../commonStyles";
 
@@ -12,6 +13,7 @@ import Task from "../components/Task";
 export default props => {
 
     state = {
+        showDoneTasks: true,
         tasks: [{
             id: Math.random(),
             descricao: 'Comprar livro de React Native',
@@ -27,6 +29,10 @@ export default props => {
         ]
     }
 
+    toggleFilter = () => {
+        this.setState({ showDoneTasks: !this.state.showDoneTasks })
+    }
+
     toggleTask = taskId => {
         const tasks = [...this.state.tasks]
         tasks.forEach(task => {
@@ -35,7 +41,7 @@ export default props => {
             }
         })
 
-        setState({ tasks : tasks })
+        setState({ tasks: tasks })
     }
 
     const today = moment().locale('pt-br').format('ddd, D [de] MMMM')
@@ -43,6 +49,12 @@ export default props => {
     return (
         <SafeAreaView style={style.container}>
             <ImageBackground source={todayImage} style={style.background}>
+                <View style={style.iconBar}>
+                    <TouchableOpacity onPress={this.toggleFilter}>
+                        <Icon name={this.state.showDoneTasks ? 'eye' : 'eye-slash'}
+                            size={20} color={commonStyles.colors.secundary}/>
+                    </TouchableOpacity>
+                </View>
                 <View style={style.titleBar}>
                     <Text style={style.title}>Hoje</Text>
                     <Text style={style.subTitle}>{today}</Text>
@@ -88,6 +100,12 @@ const style = StyleSheet.create({
         color: commonStyles.colors.secundary,
         marginLeft: 20,
         marginBottom: 20,
+    },
+    iconBar: {
+        flexDirection: 'row',
+        marginHorizontal: 20,
+        justifyContent: 'flex-end',
+        marginTop: Platform.OS === 'ios' ? 40 : 10
     }
 }
 )
